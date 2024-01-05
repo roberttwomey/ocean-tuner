@@ -18,11 +18,11 @@ c.inspect
 
 // Create GUI and launch
 (
-var w, rateaslide, ratebslide, ampslide, fadeslide, panslide, a, c, v, healthysounds, noisesounds, menua, menub, fnames;
+var w, rateaslide, ratebslide, ampslide, fadeslide, panslide, a, c, v, healthysounds, noisesounds, menua, menub, fnames, maxv;
+
+maxv = 10;
 
 z = thisProcess.nowExecutingPath.dirname.asString;
-
-
 
 // list healthy sounds
 v = PathName.new(thisProcess.nowExecutingPath.dirname.asString+/+"sounds/").files;
@@ -62,27 +62,25 @@ SynthDef("tuner", { arg out=0, fade=0, amp=0, pan=0, ratea = 1, buffnuma, rateb 
 c=Synth(\tuner, [\out, 0, \fade, 0.5, \amp, 0.5, \pan, 0, \ratea, 1.0, \buffnuma, b.bufnum, \rateb, 1, \buffnumb, d.bufnum]);
 
 w=Window("Ocean Tuner",Rect(10,200,300,450));
-w.front;
+w.alwaysOnTop=true;
+// w.front;
 
 w.view.decorator= FlowLayout(w.view.bounds);
 
 // healthy ocean sounds - SIGNAL
 menua = PopUpMenu(w, Rect(10, 10, 200, 20)).items_(healthysounds);
 menua.action = { arg menu;
-	[menu.value, menu.item].postln;
 	b = Buffer.read(s,z+/+"sounds/"+/+menu.item); //store handle to Buffer in global
 	c.set(\buffnuma, b.bufnum);
-
 };
 menua.valueAction_(healthysounds.size.rand);
 
 rateaslide= EZSlider(w, 250@24, "RateA", ControlSpec(0.1, 3, 'exponential', 0.1), {|ez| c.set(\ratea,ez.value)}, 1);
 
+
 // other ocean sounds - NOISE
 menub = PopUpMenu(w, Rect(10, 10, 200, 20)).items_(noisesounds);
 menub.action = { arg menu;
-	[menu.value, menu.item].postln;
-	// b = Buffer.read(s,"/Volumes/Work/Projects/birch-aquarium/sounds/"+/+menu.item); //store handle to Buffer in global
 	d = Buffer.read(s,z+/+"sounds/pollution"+/+menu.item); //store handle to Buffer in global
 	c.set(\buffnumb, d.bufnum);
 };
@@ -92,7 +90,7 @@ ratebslide= EZSlider(w, 250@24, "RateB", ControlSpec(0.1, 3, 'exponential', 0.1)
 
 // OVERALL CONTROLS
 fadeslide= EZSlider(w, 250@24, "Noise", ControlSpec(0, 1, 'lin', 0.05), {|ez| c.set(\fade,ez.value)}, 1);
-ampslide= EZSlider(w, 250@24, "Volume", ControlSpec(0.01, 5, 'exponential', 0.01), {|ez| c.set(\amp,ez.value)}, 1);
+ampslide= EZSlider(w, 250@24, "Volume", ControlSpec(0.01, maxv, 'exponential', 0.01), {|ez| c.set(\amp,ez.value)}, 1);
 panslide= EZSlider(w, 250@24, "Pan", ControlSpec(-1, 1, 'lin', 0.05), {|ez| c.set(\pan,ez.value)}, 0);
 
 w.onClose_({a.free; d.free; c.free});
@@ -106,7 +104,7 @@ t = Slider2D(w, Rect(0, 0, 292, 292))
 .action_({|sl|
 	c.set(\amp,sl.y);
 	c.set(\fade, sl.x);
-	ampslide.valueAction = sl.y*5;
+	ampslide.valueAction = sl.y*maxv;
 	fadeslide.valueAction = sl.x;
 });
 
