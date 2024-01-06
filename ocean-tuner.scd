@@ -7,20 +7,13 @@
 // thisProcess.nowExecutingPath.dirname.asString
 // this.class.filenameSymbol.asString.dirname
 
-// Define synths and load buffers
-(
 
-
-)
-
-b.inspect
-c.inspect
-
-// Create GUI and launch
 (
 var w, rateaslide, ratebslide, ampslide, fadeslide, panslide, a, c, v, healthysounds, noisesounds, menua, menub, fnames, maxv;
 
 maxv = 10;
+
+// ==== Define synths and load buffers ====
 
 z = thisProcess.nowExecutingPath.dirname.asString;
 
@@ -61,7 +54,9 @@ SynthDef("tuner", { arg out=0, fade=0, amp=0, pan=0, ratea = 1, buffnuma, rateb 
 
 c=Synth(\tuner, [\out, 0, \fade, 0.5, \amp, 0.5, \pan, 0, \ratea, 1.0, \buffnuma, b.bufnum, \rateb, 1, \buffnumb, d.bufnum]);
 
-w=Window("Ocean Tuner",Rect(10,200,300,450));
+// ==== Create GUI and launch ====
+
+w=Window("Ocean Tuner",Rect(10,200,300,490));
 w.alwaysOnTop=true;
 // w.front;
 
@@ -89,9 +84,9 @@ menub.valueAction_(noisesounds.size.rand);
 ratebslide= EZSlider(w, 250@24, "RateB", ControlSpec(0.1, 3, 'exponential', 0.1), {|ez| c.set(\rateb,ez.value)}, 1);
 
 // OVERALL CONTROLS
-fadeslide= EZSlider(w, 250@24, "Noise", ControlSpec(0, 1, 'lin', 0.05), {|ez| c.set(\fade,ez.value)}, 1);
+fadeslide= EZSlider(w, 250@24, "Noise", ControlSpec(0, 1, 'lin', 0.01), {|ez| c.set(\fade,ez.value)}, 1);
 ampslide= EZSlider(w, 250@24, "Volume", ControlSpec(0.01, maxv, 'exponential', 0.01), {|ez| c.set(\amp,ez.value)}, 1);
-panslide= EZSlider(w, 250@24, "Pan", ControlSpec(-1, 1, 'lin', 0.05), {|ez| c.set(\pan,ez.value)}, 0);
+panslide= EZSlider(w, 250@24, "Pan", ControlSpec(-1, 1, 'lin', 0.01), {|ez| c.set(\pan,ez.value)}, 0);
 
 w.onClose_({a.free; d.free; c.free});
 
