@@ -11,7 +11,7 @@
 (
 var w, rateaslide, ratebslide, ampslide, fadeslide, panslide, a, c, v, intbuff, ratecslide, enablec, healthysounds, noisesounds, interruption, menua, menub, menuc, fnames, maxv;
 
-maxv = 10;
+maxv = 20;
 
 // ==== Define synths and load buffers ====
 
@@ -73,16 +73,6 @@ w.alwaysOnTop=true;
 
 w.view.decorator= FlowLayout(w.view.bounds);
 
-// healthy ocean sounds - SIGNAL
-menua = PopUpMenu(w, Rect(10, 10, 200, 20)).items_(healthysounds);
-menua.action = { arg menu;
-	b = Buffer.read(s,z+/+"sounds/healthy"+/+menu.item); //store handle to Buffer in global
-	c.set(\buffnuma, b.bufnum);
-};
-// menua.valueAction_(healthysounds.size.rand);
-
-rateaslide= EZSlider(w, 250@24, "RateA", ControlSpec(0.1, 3, 'exponential', 0.01), {|ez| c.set(\ratea,ez.value)}, 1);
-
 
 // other ocean sounds - NOISE
 menub = PopUpMenu(w, Rect(10, 10, 200, 20)).items_(noisesounds);
@@ -90,9 +80,23 @@ menub.action = { arg menu;
 	d = Buffer.read(s,z+/+"sounds/pollution"+/+menu.item); //store handle to Buffer in global
 	c.set(\buffnumb, d.bufnum);
 };
-menub.valueAction_(noisesounds.size.rand);
+// menub.valueAction_(noisesounds.size.rand);
+menub.valueAction_(0);
 
 ratebslide= EZSlider(w, 250@24, "RateB", ControlSpec(0.1, 3, 'exponential', 0.01), {|ez| c.set(\rateb,ez.value)}, 1);
+
+
+// healthy ocean sounds - SIGNAL
+menua = PopUpMenu(w, Rect(10, 10, 200, 20)).items_(healthysounds);
+menua.action = { arg menu;
+	b = Buffer.read(s,z+/+"sounds/healthy"+/+menu.item); //store handle to Buffer in global
+	c.set(\buffnuma, b.bufnum);
+};
+// menua.valueAction_(healthysounds.size.rand);
+menua.valueAction_(4);
+
+rateaslide= EZSlider(w, 250@24, "RateA", ControlSpec(0.1, 3, 'exponential', 0.01), {|ez| c.set(\ratea,ez.value)}, 1);
+
 
 // OVERALL CONTROLS
 fadeslide= EZSlider(w, 250@24, "Noise", ControlSpec(0, 1, 'lin', 0.01), {|ez| c.set(\fade,ez.value)}, 1);
@@ -121,7 +125,7 @@ menuc.action = { arg menu;
 	intbuff = Buffer.read(s,z+/+"sounds/interruption/"+/+menu.item); //store handle to Buffer in global
 	c.set(\buffnumc, intbuff.bufnum);
 };
-menub.valueAction_(interruption.size.rand);
+menuc.valueAction_(0);
 
 ratecslide= EZSlider(w, 250@24, "RateC", ControlSpec(0.1, 3, 'exponential', 0.01), {|ez| c.set(\ratec,ez.value)}, 1);
 
